@@ -1,2 +1,6 @@
+beautifulsoup4
+langchain
 lxml
+numpy
 requests
+tiktoken

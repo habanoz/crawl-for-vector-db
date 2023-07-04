@@ -1,7 +1,25 @@
+# #
+# MIT License
+#
+# Copyright (c) 2023 Hüseyin ABANOZ
+# huseyinabanox@gmail.com
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+
 from urllib.parse import urlsplit
 import time
 import requests
 from lxml import etree
+from lxml.etree import HTMLParser
 from requests.exceptions import SSLError
 
 
@@ -33,7 +51,7 @@ def dfs_crawl(url_to_read, urls_read_set, url_text_map, path_exclusion_filters=N
     # soup = BeautifulSoup(html_doc.text, 'html.parser')
 
     try:
-        dom = etree.HTML(html_doc.text)
+        dom = etree.HTML(html_doc.text, parser=HTMLParser(remove_comments=True))
     except ValueError as e:
         print("Value error during dom parsing", e)
         return
@@ -105,11 +123,14 @@ def tree_to_text_list(root, texts, idx):
             continue  # ignore non text elements
 
         elif el.tag == 'div':  # a div block contain a separate text tree
-            texts.append('')
+            if el.text: texts.append(el.text)
+            else: texts.append('')
 
             # increase index so that new text added to a new place in the list
             next_idx = len(texts) - 1
             tree_to_text_list(el, texts, next_idx)
+
+            if el.tail: texts[idx] = texts[idx] + el.tail
 
             # remove empty texts
             texts[next_idx] = texts[next_idx].strip()
