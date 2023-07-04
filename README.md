@@ -1,5 +1,7 @@
 # Block Based Crawler for Semantic Search
 
+https://habanoz.github.io/tech-posts/analysis/block-oriented-webpage-crawler/
+
 ## The Algorithm
 
 The algorithm has two parts: text scrapping and link mining.
